@@ -5,6 +5,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 const http = require("http")  //importation protocole web
+const {connectToMongoDB}=require("./db/db")
+
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -38,5 +40,9 @@ app.use(function(err, req, res, next) {
   res.json('error');
 });
 
+
 const server = http.createServer(app)
-server.listen(process.env.Port,()=>(console.log("mon projet s'execute sur le port 5000")))
+
+server.listen(process.env.Port,()=>(
+  connectToMongoDB(),
+  console.log("mon projet s'execute sur le port 5000")))
