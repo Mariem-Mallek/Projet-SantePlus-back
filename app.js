@@ -9,6 +9,8 @@ const http = require("http")  //importation protocole web
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
+require("dotenv").config()  //configuration du fichier env
+
 var app = express();  //serveur
 
 app.use(logger('dev'));
@@ -37,4 +39,4 @@ app.use(function(err, req, res, next) {
 });
 
 const server = http.createServer(app)
-server.listen(5000,()=>(console.log("mon projet s'execute sur le port 5000")))
+server.listen(process.env.Port,()=>(console.log("mon projet s'execute sur le port 5000")))
