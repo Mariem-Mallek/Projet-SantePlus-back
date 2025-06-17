@@ -19,6 +19,7 @@ router.post('/addMedecinWithImg',uploadFileMedecin.single("image"),userControlle
 router.post('/addAdminWithImg',uploadFileAdmin.single("image"),userController.addAdminWithImg);
 router.post('/getUserByEmail',userController.getUserByEmail);
 
+
 //PUT
 router.put('/updateUser/:id',userController.updateUser);
 router.put('/updateMdp/:id',userController.updateMdp);

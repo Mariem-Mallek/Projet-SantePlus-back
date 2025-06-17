@@ -25,6 +25,8 @@ const ordonnanceSchema = new mongoose.Schema({
         ref: 'Utilisateur'
     },
 
+    fichierOrd:String,
+
 },{timestamps:true}
 );
 

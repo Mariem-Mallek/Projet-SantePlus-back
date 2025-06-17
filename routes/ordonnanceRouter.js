@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 const ordonnanceController = require("../Controllers/ordonnanceController");
 const uploadFileOrdonnance = require("../middlewares/uploadFileOrdonnance");
-const { deleteOne } = require('../models/Utilisateur');
+
 
 //GET
 router.get('/getAllOrds',ordonnanceController.getAllOrdonnances);
@@ -10,6 +10,7 @@ router.get('/getAllOrds',ordonnanceController.getAllOrdonnances);
 
 //POST
 router.post('/addOrdonnance',ordonnanceController.addOrdonnance);
+router.post('/uploadPDF',uploadFileOrdonnance.single("fichierOrd"),ordonnanceController.uploadPDFOrd);
 router.post('/getOrdByPatient/:id',ordonnanceController.getOrdByPatient);
 
 //PUT

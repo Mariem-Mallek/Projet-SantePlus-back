@@ -17,13 +17,14 @@ var storage = multer.diskStorage({
         //Verification si le fichier existe
         let fileIndex=1;
         while(fs.existsSync(path.join(uploadPath,fileName))){
-            const baseName=path.basename(originalName,FileExtension);
+            const baseName=path.basename(originalName,fileExtension);
             fileName=`${baseName}_${fileIndex}${fileExtension}`;
              fileIndex++
         }
         cb(null,fileName)
     }
 })
+
 
 var uploadFile= multer({storage:storage});
 module.exports=uploadFile;

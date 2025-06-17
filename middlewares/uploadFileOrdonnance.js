@@ -17,7 +17,7 @@ var storage = multer.diskStorage({
         //Verification si le fichier existe
         let fileIndex=1;
         while(fs.existsSync(path.join(uploadPath,fileName))){
-            const baseName=path.basename(originalName,FileExtension);
+            const baseName=path.basename(originalName,fileExtension);
             fileName=`${baseName}_${fileIndex}${fileExtension}`;
              fileIndex++
         }
@@ -25,5 +25,19 @@ var storage = multer.diskStorage({
     }
 })
 
-var uploadFile= multer({storage:storage});
+const uploadFile = multer({ 
+    storage: storage,
+    fileFilter: function(req, file, cb) {
+        // Vérification que le fichier est un PDF
+        if (file.mimetype === 'application/pdf') {
+            cb(null, true);
+        } else {
+            cb(new Error('Seuls les fichiers PDF sont autorisés'), false);
+        }
+    },
+    limits: {
+        fileSize: 5 * 1024 * 1024 // Limite à 5MB
+    }
+});
+
 module.exports=uploadFile;

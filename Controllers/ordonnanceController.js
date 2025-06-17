@@ -20,6 +20,28 @@ module.exports.addOrdonnance=async(req,res)=>{
     }
 }
 
+module.exports.uploadPDFOrd=async(req,res)=>{
+    try{
+        const ordonnanceData={...req.body}
+        if (typeof ordonnanceData.medicaments === 'string') {
+            ordonnanceData.medicaments = JSON.parse(ordonnanceData.medicaments);
+        }
+
+        if(req.file){
+            const{filename}=req.file;
+            ordonnanceData.fichierOrd=filename
+        }
+
+        const ordonnance = new ordonnanceModel(
+           ordonnanceData
+        )
+        const ordonnanceAdded = await ordonnance.save()
+        res.status(200).json(ordonnanceAdded)
+    }catch(error){
+        res.status(500).json({message : error.message})
+    }
+}
+
 
 module.exports.getAllOrdonnances = async(req,res)=>{
     try{
