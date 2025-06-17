@@ -206,7 +206,7 @@ module.exports.deleteUserById = async(req,res)=>{
         const {id} = req.params
         const user=await userModel.findByIdAndDelete(id)
         if(!user){
-                throw new Error("utilisateur supprimé");
+                throw new Error("utilisateur introuvable");
         }
         res.status(200).json(user)
     }catch(error){

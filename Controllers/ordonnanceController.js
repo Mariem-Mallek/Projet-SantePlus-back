@@ -1,0 +1,104 @@
+const ordonnanceModel= require("../models/Ordonnance")
+const userModel= require("../models/Utilisateur")
+
+module.exports.addOrdonnance=async(req,res)=>{
+    try{
+        const {patientId} = req.body
+        const patient = await userModel.findById(patientId);
+        
+        if (!patient) {
+            throw new Error("patient introuvable");
+        }
+        const{dateOrd,medicaments,remarques}=req.body
+        const ordonnance = new ordonnanceModel({
+           dateOrd,medicaments,remarques,patient: patient.id,
+        })
+        const ordonnanceAdded = await ordonnance.save()
+        res.status(200).json(ordonnanceAdded)
+    }catch(error){
+        res.status(500).json({message : error.message})
+    }
+}
+
+
+module.exports.getAllOrdonnances = async(req,res)=>{
+    try{
+        //const ordList = await userModel.find({dateOrd:{$gt:2008-4-2}}).sort("dateOrd").limit(2)
+        const ordList = await ordonnanceModel.find().sort({dateOrd:-1})
+        if(ordList.length==0){
+                throw new Error("aucune ordonnance est introuvable");
+        }
+        res.status(200).json(ordList)
+    }catch(error){
+        res.status(500).json({message : error.message})
+    }
+}
+
+
+module.exports.getOrdonnanceById = async(req,res)=>{
+    try{
+        const {id} = req.params
+        const ordonnance=await ordonnanceModel.findById(id)
+        if(!ordonnance){
+                throw new Error("ordonnance introuvable");
+        }
+        res.status(200).json(ordonnance)
+    }catch(error){
+        res.status(500).json({message : error.message})
+    }
+}
+
+module.exports.getOrdByPatient = async(req,res)=>{
+    try{
+        const {id} = req.body
+        const patient = await userModel.findById(id);
+        
+        if (!patient) {
+            throw new Error("patient introuvable");
+        }
+
+        const ordonnance=await ordonnanceModel.find({patient: patient.id})
+        if(!ordonnance){
+                throw new Error("ordonnance introuvable");
+        }
+        res.status(200).json(ordonnance)
+    }catch(error){
+        res.status(500).json({message : error.message})
+    }
+}
+
+
+module.exports.updateOrdonnance = async(req,res)=>{
+    try{
+        const {id} = req.params
+        const{dateOrd,medicaments,remarques}=req.body
+        const ordonnance = await ordonnanceModel.findById(id)
+        if(!ordonnance){
+                throw new Error("ordonnance introuvable");
+        }
+
+        const updatedOrdonnance= await ordonnanceModel.findByIdAndUpdate(
+            id,
+            {
+                $set:{dateOrd,medicaments,remarques}
+            }
+        )
+        res.status(200).json(updatedOrdonnance)
+    }catch(error){
+        res.status(500).json({message : error.message})
+    }
+}
+
+
+module.exports.deleteOrdById = async(req,res)=>{
+    try{
+        const {id} = req.params
+        const ordonnance=await ordonnanceModel.findByIdAndDelete(id)
+        if(!ordonnance){
+                throw new Error("ordonnance introuvable");
+        }
+        res.status(200).json("ordonnance supprimée avec succés")
+    }catch(error){
+        res.status(500).json({message : error.message})
+    }
+}
