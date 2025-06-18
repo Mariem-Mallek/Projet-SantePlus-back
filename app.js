@@ -12,6 +12,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/utilisateurRouter');
 var ordRouter = require('./routes/ordonnanceRouter');
 var rendezVousRouter = require('./routes/rendezvousRouter');
+var interRouter = require('./routes/interactionRouter');
 
 require("dotenv").config()  //configuration du fichier env
 
@@ -27,6 +28,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/ordonnances', ordRouter);
 app.use('/rendezvous', rendezVousRouter);
+app.use('/interactions', interRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -114,7 +114,7 @@ module.exports.updateOrdonnance = async(req,res)=>{
 }
 
 
-module.exports.deleteOrdById = async(req,res)=>{
+module.exports.deleteOrd = async(req,res)=>{
     try{
         const {id} = req.params
         const ordonnance=await ordonnanceModel.findByIdAndDelete(id)

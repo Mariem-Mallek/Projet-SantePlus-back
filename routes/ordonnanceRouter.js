@@ -18,7 +18,7 @@ router.post('/getOrdByPatient/:id',ordonnanceController.getOrdByPatient);
 router.put('/updateOrd/:id',ordonnanceController.updateOrdonnance);
 
 //DELETE
-router.delete('/deleteOrdById/:id',ordonnanceController.deleteOrdById)
+router.delete('/deleteOrdById/:id',ordonnanceController.deleteOrd)
 
 
 module.exports = router;
