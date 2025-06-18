@@ -11,7 +11,10 @@ module.exports.addOrdonnance=async(req,res)=>{
         }
         const{dateOrd,medicaments,remarques}=req.body
         const ordonnance = new ordonnanceModel({
-           dateOrd,medicaments,remarques,patient: patient.id,
+           dateOrd,
+           medicaments,
+           remarques,
+           patient: patient.id,
         })
         const ordonnanceAdded = await ordonnance.save()
         res.status(200).json(ordonnanceAdded)
@@ -45,7 +48,6 @@ module.exports.uploadPDFOrd=async(req,res)=>{
 
 module.exports.getAllOrdonnances = async(req,res)=>{
     try{
-        //const ordList = await userModel.find({dateOrd:{$gt:2008-4-2}}).sort("dateOrd").limit(2)
         const ordList = await ordonnanceModel.find().sort({dateOrd:-1})
         if(ordList.length==0){
                 throw new Error("aucune ordonnance est introuvable");

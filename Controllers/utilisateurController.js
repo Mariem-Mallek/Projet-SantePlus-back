@@ -6,7 +6,15 @@ module.exports.addPatient=async(req,res)=>{
         const {nom,prenom,dateNaiss,email,mdp,sexe,poids,taille}=req.body
         const rolePatient = "patient"
         const user = new userModel({
-            nom,prenom,dateNaiss,email,mdp,sexe,poids,taille,role:rolePatient
+            nom,
+            prenom,
+            dateNaiss,
+            email,
+            mdp,
+            sexe,
+            poids,
+            taille,
+            role:rolePatient
         })
         const patientAdded = await user.save()
         res.status(200).json(patientAdded)
@@ -20,7 +28,16 @@ module.exports.addMedecin=async(req,res)=>{
         const {nom,prenom,dateNaiss,email,mdp,numProfessionnel,specialite,ville,adresse}=req.body
         const roleMedecin = "medecin"
         const user = new userModel({
-            nom,prenom,dateNaiss,email,mdp,numProfessionnel,specialite,ville,adresse,role:roleMedecin
+            nom,
+            prenom,
+            dateNaiss,
+            email,
+            mdp,
+            numProfessionnel,
+            specialite,
+            ville,
+            adresse,
+            role:roleMedecin
         })
         const medecinAdded = await user.save()
         res.status(200).json(medecinAdded)
@@ -34,7 +51,12 @@ module.exports.addAdmin=async(req,res)=>{
         const {nom,prenom,email,mdp,dateEmbauche}=req.body
         const roleAdmin = "admin"
         const user = new userModel({
-            nom,prenom,email,mdp,dateEmbauche,role:roleAdmin
+            nom,
+            prenom,
+            email,
+            mdp,
+            dateEmbauche,
+            role:roleAdmin
         })
         const adminAdded = await user.save()
         res.status(200).json(adminAdded)

@@ -6,6 +6,7 @@ const uploadFileOrdonnance = require("../middlewares/uploadFileOrdonnance");
 
 //GET
 router.get('/getAllOrds',ordonnanceController.getAllOrdonnances);
+router.get('/getOrdById/:id',ordonnanceController.getOrdonnanceById);
 
 
 //POST
