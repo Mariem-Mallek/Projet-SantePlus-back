@@ -1,4 +1,7 @@
 const userModel= require("../models/Utilisateur")
+const rendezvousModel = require("../models/RendezVous");
+const ordonnanceModel = require("../models/Ordonnance");
+const interactionModel = require("../models/Interaction");
 const bcrypt= require("bcrypt")
 
 module.exports.addPatient=async(req,res)=>{
@@ -226,10 +229,34 @@ module.exports.updateMdp = async(req,res)=>{
 module.exports.deleteUserById = async(req,res)=>{
     try{
         const {id} = req.params
-        const user=await userModel.findByIdAndDelete(id)
+        const user = await userModel.findByIdAndDelete(id)
         if(!user){
                 throw new Error("utilisateur introuvable");
         }
+
+        // Suppression des rendez-vous
+        await rendezvousModel.deleteMany({
+            $or: [
+                { patient: id },
+                { medecin: id }
+            ]
+        });
+
+        // Suppression des ordonnances
+        await ordonnanceModel.deleteMany({
+            $or: [
+                { patient: id },
+                { medecin: id }
+            ]
+        });
+
+        // Suppression des interactions
+        await interactionModel.deleteMany({
+            $or: [
+                { patient: id },
+                { medecin: id }
+            ]
+        });
         res.status(200).json(user)
     }catch(error){
         res.status(500).json({message : error.message})

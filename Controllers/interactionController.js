@@ -23,6 +23,11 @@ module.exports.addInteraction = async (req, res) => {
             medecin: medecin.id
         })
         const savedInteraction = await interaction.save()
+
+        // Ajout de l'ordonnance à la liste de chaque utilisateur
+        await userModel.findByIdAndUpdate(patientId, {$push: {interactions: interaction._id }})
+        await userModel.findByIdAndUpdate(medecinId, {$push: {interactions: interaction._id }})
+
         res.status(200).json(savedInteraction)
     } catch (error) {
         res.status(500).json({ message: error.message })
@@ -47,7 +52,7 @@ module.exports.getAllInteractions = async (req, res) => {
         const interactions = await interactionModel.find({
             patient: patientId,
             medecin: medecinId
-        }).sort({ createdAt: -1 });
+        }).sort({ createdAt: -1 }).populate("patient").populate("medecin");
 
         res.status(200).json(interactions);
     } catch (error) {
@@ -56,37 +61,39 @@ module.exports.getAllInteractions = async (req, res) => {
 };
 
 
-module.exports.updateInteraction = async(req,res)=>{
-    try{
-        const {id} = req.params
-        const{contenuInteraction}=req.body
+module.exports.updateInteraction = async (req, res) => {
+    try {
+        const { id } = req.params
+        const { contenuInteraction } = req.body
         const interaction = await interactionModel.findById(id)
-        if(!interaction){
-                throw new Error("interaction introuvable");
+        if (!interaction) {
+            throw new Error("interaction introuvable");
         }
 
-        const updatedInteraction= await interactionModel.findByIdAndUpdate(
+        const updatedInteraction = await interactionModel.findByIdAndUpdate(
             id,
             {
-                $set:{contenuInteraction}
+                $set: { contenuInteraction }
             }
         )
         res.status(200).json(updatedInteraction)
-    }catch(error){
-        res.status(500).json({message : error.message})
+    } catch (error) {
+        res.status(500).json({ message: error.message })
     }
 }
 
 
-module.exports.deleteInteraction = async(req,res)=>{
-    try{
-        const {id} = req.params
-        const interaction=await interactionModel.findByIdAndDelete(id)
-        if(!interaction){
-                throw new Error("interaction introuvable");
+module.exports.deleteInteraction = async (req, res) => {
+    try {
+        const { id } = req.params
+        const interaction = await interactionModel.findByIdAndDelete(id)
+        if (!interaction) {
+            throw new Error("interaction introuvable");
         }
+
+        await userModel.updateMany({},{$pull: {interactions: interaction._id }})
         res.status(200).json("interaction supprimée avec succés")
-    }catch(error){
-        res.status(500).json({message : error.message})
+    } catch (error) {
+        res.status(500).json({ message: error.message })
     }
 }
