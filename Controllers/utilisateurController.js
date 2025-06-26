@@ -28,7 +28,7 @@ module.exports.addPatient=async(req,res)=>{
 
 module.exports.addMedecin=async(req,res)=>{
     try{
-        const {nom,prenom,dateNaiss,email,mdp,numProfessionnel,specialite,ville,adresse}=req.body
+        const {nom,prenom,dateNaiss,email,mdp,numProfessionnel,specialite,ville,adresse,latitude,longitude}=req.body
         const roleMedecin = "medecin"
         const user = new userModel({
             nom,
@@ -40,6 +40,8 @@ module.exports.addMedecin=async(req,res)=>{
             specialite,
             ville,
             adresse,
+            latitude,
+            longitude,
             role:roleMedecin
         })
         const medecinAdded = await user.save()
@@ -172,6 +174,18 @@ module.exports.getUserByEmail = async(req,res)=>{
     }
 }
 
+module.exports.getMedecinsByLocalisation = async(req,res)=>{
+    try{
+        const medecins =await userModel.find({role: 'medecin'},
+            'nom prenom specialite latitude longitude ville adresse image'
+        );
+
+        res.status(200).json(medecins)
+    }catch(error){
+        res.status(500).json({message : error.message})
+    }
+}
+
 module.exports.updateUser = async(req,res)=>{
     try{
         const {id} = req.params
@@ -188,6 +202,29 @@ module.exports.updateUser = async(req,res)=>{
             }
         )
         res.status(200).json(updatedUser)
+    }catch(error){
+        res.status(500).json({message : error.message})
+    }
+}
+
+
+module.exports.updateLocalisation = async(req,res)=>{
+    try{
+        const {id} = req.params
+        const {latitude, longitude} = req.body;
+
+        const updatedMedecin= await userModel.findByIdAndUpdate(
+            id,
+            {
+                $set:{latitude,longitude}
+            }
+        )
+
+        if (!updatedMedecin) {
+            return res.status(404).json({ message: "Médecin introuvable" });
+        }
+
+        res.status(200).json(updatedMedecin)
     }catch(error){
         res.status(500).json({message : error.message})
     }

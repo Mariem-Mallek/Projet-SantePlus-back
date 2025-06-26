@@ -56,12 +56,16 @@ const utilisateurSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Ordonnance"
     }],
-    
+
     interactions: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Interaction"
     }],
 
+    assurances: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "FeuilleCNAM"
+    }]
 
 
 

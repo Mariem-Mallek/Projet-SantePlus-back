@@ -8,6 +8,7 @@ const uploadFileAdmin = require("../middlewares/uploadFileAdmin");
 
 //GET
 router.get('/getAllUsers',userController.getAllUsers);
+router.get('/localisation',userController.getMedecinsByLocalisation);
 router.get('/getUserById/:id',userController.getUserById);
 
 //POST
@@ -23,6 +24,7 @@ router.post('/getUserByEmail',userController.getUserByEmail);
 //PUT
 router.put('/updateUser/:id',userController.updateUser);
 router.put('/updateMdp/:id',userController.updateMdp);
+router.put('/updateLocal/:id',userController.updateLocalisation);
 
 //DELETE
 router.delete('/deleteUserById/:id',userController.deleteUserById)

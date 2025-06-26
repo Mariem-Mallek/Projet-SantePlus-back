@@ -48,6 +48,11 @@ module.exports.uploadPDFOrd = async (req, res) => {
             ordonnanceData
         )
         const ordonnanceAdded = await ordonnance.save()
+
+        // Ajout de l'ordonnance à la liste de chaque utilisateur
+        await userModel.findByIdAndUpdate(ordonnanceData.patient, {$push: { ordonnances: ordonnance._id } })
+        await userModel.findByIdAndUpdate(ordonnanceData.medecin, {$push: { ordonnances: ordonnance._id } })
+
         res.status(200).json(ordonnanceAdded)
     } catch (error) {
         res.status(500).json({ message: error.message })
