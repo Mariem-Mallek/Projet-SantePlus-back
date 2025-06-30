@@ -30,6 +30,9 @@ const utilisateurSchema = new mongoose.Schema({
         enum: ['patient', 'medecin', 'admin']
     },
 
+    connected : Boolean,
+
+
     //Patient 
     sexe: String,
     poids: Number,
@@ -78,11 +81,28 @@ utilisateurSchema.pre("save", async function (next) {
         const salt = await bcrypt.genSalt()
         const user = this
         user.mdp = await bcrypt.hash(user.mdp, salt)
+        user.connected=false;
         next()
     } catch (error) {
         next(error)
     }
-})
+});
+
+
+utilisateurSchema.statics.login= async function(email,motDePasse){
+    const user= await this.findOne({email})
+    if(user){
+        const auth = await bcrypt.compare(motDePasse,user.mdp)
+        if(auth){
+            return user
+        }else{
+            throw new Error ("mdp incorrect !")
+        }
+    }else{
+        throw new Error("email incorrect !");
+    }
+}
+
 
 //Exportation
 const Utilisateur = mongoose.model("Utilisateur", utilisateurSchema)
