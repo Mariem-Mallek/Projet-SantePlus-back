@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 
 module.exports.addPatient = async (req, res) => {
     try {
-        const { nom, prenom, dateNaiss, email, mdp, sexe, poids, taille } = req.body
+        const { nom, prenom, dateNaiss, email, mdp, numTel} = req.body
         const rolePatient = "patient"
         const user = new userModel({
             nom,
@@ -16,9 +16,7 @@ module.exports.addPatient = async (req, res) => {
             dateNaiss,
             email,
             mdp,
-            sexe,
-            poids,
-            taille,
+            numTel,
             role: rolePatient
         })
         const patientAdded = await user.save()
@@ -30,7 +28,7 @@ module.exports.addPatient = async (req, res) => {
 
 module.exports.addMedecin = async (req, res) => {
     try {
-        const { nom, prenom, dateNaiss, email, mdp, numProfessionnel, specialite, ville, adresse, latitude, longitude } = req.body
+        const { nom, prenom, dateNaiss, email, mdp, numProfessionnel, specialite, ville } = req.body
         const roleMedecin = "medecin"
         const user = new userModel({
             nom,
@@ -41,9 +39,6 @@ module.exports.addMedecin = async (req, res) => {
             numProfessionnel,
             specialite,
             ville,
-            adresse,
-            latitude,
-            longitude,
             role: roleMedecin
         })
         const medecinAdded = await user.save()
@@ -323,14 +318,16 @@ module.exports.loginUser = async (req, res) => {
         const token = createToken(user._id);
         await userModel.findByIdAndUpdate({ _id: user._id },
             { connected: true }
-
         )
         res.cookie("token", token, {
             httpOnly: true,    // protégé des scripts JS (XSS)
             maxAge: 60000    // durée du cookie en ms 
         });
 
-        res.status(200).json({ message: "Authentification vérifiée", user: user })
+        res.status(200).json({
+            message: "Authentification vérifiée",
+            token: token,
+        });
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
@@ -338,13 +335,12 @@ module.exports.loginUser = async (req, res) => {
 
 module.exports.logoutUser = async (req, res) => {
     try {
-
         const user = req.user; // récupéré depuis ton middleware auth
 
         if (!user) {
             return res.status(401).json({ message: "Utilisateur non authentifié" });
         }
-        
+
         const updatedUser = await userModel.findByIdAndUpdate({ _id: user._id }, { connected: false })
         res.cookie("token", "", {
             httpOnly: true,    // protégé des scripts JS (XSS)

@@ -25,6 +25,7 @@ const utilisateurSchema = new mongoose.Schema({
         default: "utilisateur.png"
     },
     dateNaiss: Date,
+    numTel: String,
     role: {
         type: String,
         enum: ['patient', 'medecin', 'admin']
@@ -69,9 +70,6 @@ const utilisateurSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "FeuilleCNAM"
     }]
-
-
-
 }, { timestamps: true }
 );
 
